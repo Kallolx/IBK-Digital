@@ -39,11 +39,6 @@ const contactInfo = [
     href: 'mailto:Khazriibrahim11@gmail.com'
   },
   {
-    icon: MapPin,
-    label: 'Nairobi, Kenya',
-    href: '#'
-  },
-  {
     icon: Clock,
     label: '24/7 Support Available',
     href: '#'
