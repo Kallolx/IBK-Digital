@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import { ExternalLink, Star, Tv, Wifi, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useState } from 'react';
 
@@ -6,7 +7,7 @@ interface ProductCardProps {
   price: string;
   description: string;
   features: string[];
-  images?: {
+  images: {
     primary: string;
     secondary: string;
   };
@@ -48,69 +49,56 @@ export default function ProductCard({
   };
 
   return (
-    <div className="group bg-white dark:bg-gray-800 rounded-2xl sm:rounded-3xl overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100 dark:border-gray-700">
-      <div className="relative h-48 sm:h-52 overflow-hidden">
-        <div className="absolute top-4 left-4 z-10 flex items-center gap-2 bg-white/90 dark:bg-gray-900/90 text-gray-900 dark:text-white px-3 py-1.5 rounded-full text-sm font-medium backdrop-blur-sm">
-          {getIcon()}
-          <span>Premium</span>
-        </div>
-        
-        <img
+    <div className="group relative bg-gray-800/50 backdrop-blur-lg rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-700/50">
+      {/* Background Glow */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-teal-500/5 group-hover:opacity-100 transition-opacity duration-500"></div>
+      
+      {/* Image Container */}
+      <div className="relative h-48 overflow-hidden">
+        <motion.img
           src={currentImage === 'primary' ? primaryImage : secondaryImage}
           alt={title}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+          initial={{ scale: 1 }}
+          whileHover={{ scale: 1.1 }}
         />
-
-        {hasMultipleImages && (
-          <div className="absolute inset-0 flex items-center justify-between px-3 sm:px-4 opacity-0 group-hover:opacity-100 transition-opacity">
-            <button
-              onClick={toggleImage}
-              className="p-2 rounded-full bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm"
-            >
-              <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-            <button
-              onClick={toggleImage}
-              className="p-2 rounded-full bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white hover:bg-white dark:hover:bg-gray-800 backdrop-blur-sm"
-            >
-              <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
-            </button>
-          </div>
-        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent opacity-60"></div>
       </div>
-      
-      <div className="p-4 sm:p-6">
-        <div className="flex items-start justify-between gap-4 mb-3">
-          <h3 className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white leading-tight">
-            {title}
-          </h3>
-          <div className="flex-shrink-0">
-            <span className="inline-flex items-center px-3 sm:px-4 py-1 sm:py-1.5 rounded-full bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 font-bold text-sm border border-red-100 dark:border-red-800">
-              {price}
-            </span>
-          </div>
-        </div>
 
-        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-          {description}
-        </p>
-
-        <div className="space-y-2 mb-6">
-          {features.map((feature) => (
-            <div key={feature} className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
-              <div className="w-1.5 h-1.5 rounded-full bg-green-500 flex-shrink-0" />
-              <span className="line-clamp-1">{feature}</span>
-            </div>
-          ))}
-        </div>
+      {/* Content */}
+      <div className="p-6 relative">
+        <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
+          {title}
+        </h3>
+        <p className="text-gray-400 text-sm mb-4">{description}</p>
         
-        <button
+        {/* Features */}
+        <ul className="space-y-2 mb-6">
+          {features.map((feature, index) => (
+            <li key={index} className="flex items-center text-gray-300 text-sm">
+              <svg className="w-4 h-4 mr-2 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+              </svg>
+              {feature}
+            </li>
+          ))}
+        </ul>
+
+        {/* Price */}
+        <div className="flex justify-between items-center mb-6">
+          <span className="text-2xl font-bold text-white">{price}</span>
+          <span className="text-sm text-gray-400">per month</span>
+        </div>
+
+        {/* CTA Button */}
+        <motion.a
           onClick={handleWhatsAppClick}
-          className="group/btn flex items-center justify-between w-full bg-green-600 dark:bg-green-500 text-white px-4 sm:px-6 py-2.5 sm:py-3 rounded-xl sm:rounded-2xl font-medium transition-all duration-300 hover:bg-green-700 dark:hover:bg-green-600 hover:scale-[0.98] active:scale-[0.97]"
+          className="block w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-teal-500 text-white text-center rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
+          whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(139, 92, 246, 0.3)" }}
+          whileTap={{ scale: 0.98 }}
         >
           <span>Contact via WhatsApp</span>
-          <ExternalLink className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300 group-hover/btn:rotate-45" />
-        </button>
+        </motion.a>
       </div>
     </div>
   );

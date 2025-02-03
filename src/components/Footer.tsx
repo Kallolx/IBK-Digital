@@ -1,145 +1,144 @@
-import { Mail, Facebook, Twitter, Instagram, Phone, ArrowUpRight, MapPin, Clock, Send, MessageCircle } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { HiMail } from 'react-icons/hi';
 
-const socialLinks = [
-  {
-    icon: Facebook,
-    href: 'https://www.facebook.com/ibrahim.khazri.12',
-    label: 'Facebook Profile',
-    color: 'hover:bg-blue-600'
-  },
-  {
-    icon: Twitter,
-    href: 'https://twitter.com/Ibrahimke_11',
-    label: 'Twitter',
-    color: 'hover:bg-sky-500'
-  },
-  {
-    icon: Instagram,
-    href: 'https://www.instagram.com/officialahim11.ke',
-    label: 'Instagram',
-    color: 'hover:bg-pink-600'
-  },
-  {
-    icon: Mail,
-    href: 'mailto:Khazriibrahim11@gmail.com',
-    label: 'Email',
-    color: 'hover:bg-red-600'
-  }
-];
+const Footer = () => {
+  const currentYear = new Date().getFullYear();
 
-const contactInfo = [
-  {
-    icon: Phone,
-    label: '+254757033657',
-    href: 'tel:+254757033657'
-  },
-  {
-    icon: Mail,
-    label: 'Khazriibrahim11@gmail.com',
-    href: 'mailto:Khazriibrahim11@gmail.com'
-  },
-  {
-    icon: Clock,
-    label: '24/7 Support Available',
-    href: '#'
-  }
-];
+  const socialLinks = [
+    { icon: FaWhatsapp, href: 'https://wa.me/254757033657', label: 'WhatsApp' },
+    { icon: FaInstagram, href: 'https://instagram.com/Officialahim11.ke', label: 'Instagram' },
+    { icon: HiMail, href: 'mailto:Khazriibrahim11@gmail.com', label: 'Email' },
+  ];
 
-export default function Footer() {
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleWhatsAppClick = () => {
-    window.open('https://wa.me/254757033657?text=Hi,%20I%20would%20like%20to%20know%20more%20about%20your%20services', '_blank');
-  };
+  const footerLinks = [
+    {
+      title: 'Services',
+      links: [
+        { label: 'Web Development', href: '#services' },
+        { label: 'Graphic Design', href: '#services' },
+        { label: 'Resume Design', href: '#services' },
+        { label: 'Streaming Services', href: '#streaming' },
+      ]
+    },
+    {
+      title: 'Company',
+      links: [
+        { label: 'About Us', href: '#about' },
+        { label: 'Our Work', href: '#portfolio' },
+        { label: 'Testimonials', href: '#testimonials' },
+        { label: 'Contact', href: '#contact' },
+      ]
+    },
+    {
+      title: 'Support',
+      links: [
+        { label: 'Help Center', href: '#' },
+        { label: 'Terms of Service', href: '#' },
+        { label: 'Privacy Policy', href: '#' },
+        { label: 'FAQ', href: '#' },
+      ]
+    }
+  ];
 
   return (
-    <footer className="relative bg-black text-white pt-20 pb-12 overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent to-red-950/20" />
-      
-      <div className="container relative mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-16">
-          <h2 className="text-4xl font-bold mb-6 bg-gradient-to-r from-red-500 to-blue-500 bg-clip-text text-transparent">
-            Get in Touch
-          </h2>
-          <p className="text-xl text-gray-300 mb-8">
-            IBK Digital Tech is dedicated to providing high-quality digital solutions for all your entertainment needs.
-          </p>
-          <button
-            onClick={handleWhatsAppClick}
-            className="group inline-flex items-center gap-3 bg-green-600 hover:bg-green-700 text-white px-8 py-4 rounded-full font-medium transition-all duration-300 hover:scale-105"
-          >
-            <MessageCircle className="w-5 h-5" />
-            <span>Chat with us on WhatsApp</span>
-            <ArrowUpRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
-          </button>
-        </div>
+    <footer className="relative overflow-hidden bg-gray-900/30 backdrop-blur-sm pt-24 pb-12">
+      {/* Background Effects */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-purple-500/10 rounded-full filter blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-teal-500/10 rounded-full filter blur-3xl"></div>
+      </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          {contactInfo.map((info) => (
-            <a
-              key={info.label}
-              href={info.href}
-              className="group flex items-center gap-4 hover:text-red-500 transition-all duration-300"
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
+        {/* Footer Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
+          {/* Brand Section */}
+          <div className="lg:col-span-2">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5 }}
             >
-              <div className="p-4 bg-white/5 rounded-xl group-hover:bg-white/10 transition-all duration-300 group-hover:scale-110">
-                <info.icon className="w-6 h-6" />
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent mb-4">
+                IBK Digital Tech
+              </h2>
+              <p className="text-gray-300 mb-6 max-w-md">
+                Transform your digital presence with our innovative solutions. 
+                Let's create something amazing together.
+              </p>
+              
+              {/* Social Links */}
+              <div className="flex gap-4">
+                {socialLinks.map((social, index) => (
+                  <motion.a
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-gray-300 hover:bg-white/10 hover:text-white transition-all duration-300"
+                    whileHover={{ y: -3 }}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                  >
+                    <social.icon className="w-5 h-5" />
+                  </motion.a>
+                ))}
               </div>
-              <div>
-                <span className="block text-sm text-gray-400">Contact via</span>
-                <span className="font-medium">{info.label}</span>
-              </div>
-            </a>
-          ))}
-        </div>
-
-        <div className="flex flex-wrap justify-center gap-6 mb-16">
-          {socialLinks.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`group relative p-4 bg-white/5 rounded-xl transition-all duration-300 hover:scale-110 ${link.color}`}
-            >
-              <link.icon className="w-6 h-6 transition-transform duration-300 group-hover:rotate-12" />
-              <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-                {link.label}
-              </span>
-            </a>
-          ))}
-        </div>
-
-        <div className="max-w-xl mx-auto mb-16">
-          <div className="relative">
-            <input
-              type="email"
-              placeholder="Enter your email for updates"
-              className="w-full bg-white/5 rounded-full px-6 py-4 pr-12 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-red-500"
-            />
-            <button className="absolute right-2 top-1/2 -translate-y-1/2 p-2 bg-red-500 rounded-full hover:bg-red-600 transition-colors">
-              <Send className="w-5 h-5" />
-            </button>
+            </motion.div>
           </div>
+
+          {/* Links Sections */}
+          {footerLinks.map((section, sectionIndex) => (
+            <motion.div
+              key={section.title}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: sectionIndex * 0.1 }}
+            >
+              <h3 className="text-white font-semibold mb-4">{section.title}</h3>
+              <ul className="space-y-3">
+              </ul>
+            </motion.div>
+          ))}
         </div>
 
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-8 pt-8 border-t border-white/10">
-          <p className="text-gray-400">
-            &copy; 2025 IBK Digital Tech. All Rights Reserved.
-          </p>
-          
-          <button
-            onClick={scrollToTop}
-            className="group flex items-center gap-2 text-sm font-medium hover:text-red-500 transition-all duration-300"
-          >
-            Back to top
-            <span className="p-2 bg-white/5 rounded-full group-hover:bg-white/10 transition-all duration-300 group-hover:scale-110">
-              <ArrowUpRight className="w-4 h-4 transition-transform duration-300 group-hover:-translate-y-1" />
-            </span>
-          </button>
-        </div>
+        {/* Bottom Bar */}
+        <motion.div
+          className="pt-8 mt-8 border-t border-white/10"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5, delay: 0.2 }}
+        >
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-gray-400 text-sm text-center md:text-left">
+              © {currentYear} IBK Digital Tech. All rights reserved.
+            </p>
+            <div className="flex items-center gap-6">
+              <motion.a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition-colors duration-300"
+                whileHover={{ x: 3 }}
+              >
+                Privacy Policy
+              </motion.a>
+              <motion.a
+                href="#"
+                className="text-gray-400 hover:text-white text-sm transition-colors duration-300"
+                whileHover={{ x: 3 }}
+              >
+                Terms of Service
+              </motion.a>
+            </div>
+          </div>
+        </motion.div>
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;

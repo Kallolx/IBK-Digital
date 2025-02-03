@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import Header from './components/Header';
+import { motion } from 'framer-motion';
+import Hero from './components/Hero';
+import Services from './components/Services';
+import Testimonials from './components/Testimonials';
 import ProductCard from './components/ProductCard';
 import Footer from './components/Footer';
 
-const products = [
+const streamingProducts = [
   {
     title: 'Sports Channels',
     price: 'KSH 600',
@@ -51,7 +54,7 @@ const products = [
 ];
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
+  const [isDark, setIsDark] = useState(true);
 
   const toggleTheme = () => {
     setIsDark(!isDark);
@@ -59,26 +62,47 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen font-['DM_Sans'] ${isDark ? 'dark bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
-      <Header isDark={isDark} toggleTheme={toggleTheme} />
+    <div className={`min-h-screen font-['DM_Sans'] ${isDark ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
+      <Hero isDark={isDark} toggleTheme={toggleTheme} />
+      <Services />
+      <Testimonials />
       
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 lg:py-24" id="services">
-        <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16">
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Services</h2>
-          <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300">
-            Premium entertainment solutions at unbeatable prices
-          </p>
+      {/* Streaming Products Section */}
+      <section className="py-20" id="streaming">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div 
+            className="max-w-3xl mx-auto text-center mb-12 sm:mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
+            <span className="px-4 py-2 rounded-full bg-gray-800/50 border border-gray-700 text-sm text-purple-400 mb-4 inline-block">
+              Streaming Services
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-bold mt-4 mb-4 bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
+              Premium Entertainment
+            </h2>
+            <p className="text-lg sm:text-xl text-gray-400">
+              Access unlimited entertainment with our premium streaming packages
+            </p>
+          </motion.div>
+          
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
+            {streamingProducts.map((product, index) => (
+              <motion.div
+                key={product.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <ProductCard {...product} />
+              </motion.div>
+            ))}
+          </div>
         </div>
-        
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 max-w-7xl mx-auto">
-          {products.map((product) => (
-            <ProductCard
-              key={product.title}
-              {...product}
-            />
-          ))}
-        </div>
-      </main>
+      </section>
 
       <Footer />
     </div>
