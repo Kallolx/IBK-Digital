@@ -1,105 +1,124 @@
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Star, Tv, Wifi, ChevronLeft, ChevronRight } from 'lucide-react';
-import { useState } from 'react';
+import { FaPlay, FaPause } from 'react-icons/fa';
+import { HiArrowRight } from 'react-icons/hi';
 
 interface ProductCardProps {
   title: string;
-  price: string;
   description: string;
   features: string[];
   images: {
     primary: string;
     secondary: string;
   };
-  imageUrl?: string;
+  video?: string;
   whatsappLink: string;
+  isDark: boolean;
 }
 
-export default function ProductCard({ 
-  title, 
-  price, 
-  description,
-  features,
-  images, 
-  imageUrl, 
-  whatsappLink 
-}: ProductCardProps) {
-  const [currentImage, setCurrentImage] = useState<'primary' | 'secondary'>('primary');
+const ProductCard = ({ title, description, features, images, video, whatsappLink, isDark }: ProductCardProps) => {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
-  // Handle both new images object and legacy imageUrl
-  const hasMultipleImages = images && images.primary && images.secondary;
-  const primaryImage = hasMultipleImages ? images.primary : (imageUrl || '/placeholder-image.jpg');
-  const secondaryImage = hasMultipleImages ? images.secondary : (imageUrl || '/placeholder-image.jpg');
-
-  const getIcon = () => {
-    if (title.includes('Sports')) return <Star className="w-5 h-5" />;
-    if (title.includes('Movies')) return <Tv className="w-5 h-5" />;
-    if (title.includes('DStv')) return <Tv className="w-5 h-5" />;
-    return <Wifi className="w-5 h-5" />;
-  };
-
-  const toggleImage = () => {
-    setCurrentImage(current => current === 'primary' ? 'secondary' : 'primary');
-  };
-
-  const handleWhatsAppClick = () => {
-    const message = `Hi, I'm interested in ${title} priced at ${price}. Please provide more information.`;
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`${whatsappLink}?text=${encodedMessage}`, '_blank');
+  const toggleVideo = () => {
+    if (!videoRef.current) return;
+    
+    if (isPlaying) {
+      videoRef.current.pause();
+    } else {
+      videoRef.current.play();
+    }
+    setIsPlaying(!isPlaying);
   };
 
   return (
-    <div className="group relative bg-gray-800/50 backdrop-blur-lg rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 border border-gray-700/50">
-      {/* Background Glow */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-teal-500/5 group-hover:opacity-100 transition-opacity duration-500"></div>
-      
-      {/* Image Container */}
-      <div className="relative h-48 overflow-hidden">
-        <motion.img
-          src={currentImage === 'primary' ? primaryImage : secondaryImage}
-          alt={title}
-          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
-          initial={{ scale: 1 }}
-          whileHover={{ scale: 1.1 }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-800 to-transparent opacity-60"></div>
+    <motion.div
+      className={`group relative rounded-2xl overflow-hidden ${
+        isDark
+          ? 'bg-gray-800/50 backdrop-blur-lg border border-gray-700/50'
+          : 'bg-white/70 hover:bg-white/90 border border-gray-200'
+      }`}
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+    >
+      {/* Media Container */}
+      <div className="relative h-64 overflow-hidden">
+        {video ? (
+          <>
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              src={video}
+              loop
+              muted
+              playsInline
+            />
+            <button
+              onClick={toggleVideo}
+              className="absolute bottom-4 right-4 z-10 p-3 rounded-full bg-black/50 text-white backdrop-blur-sm hover:bg-black/70 transition-colors"
+            >
+              {isPlaying ? <FaPause className="w-4 h-4" /> : <FaPlay className="w-4 h-4" />}
+            </button>
+          </>
+        ) : (
+          <img
+            src={images.primary}
+            alt={title}
+            className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500"
+          />
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/50 to-transparent opacity-60" />
       </div>
 
       {/* Content */}
-      <div className="p-6 relative">
-        <h3 className="text-xl font-bold mb-2 bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
+      <div className="p-6 space-y-4">
+        <h3 className="text-xl font-bold bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
           {title}
         </h3>
-        <p className="text-gray-400 text-sm mb-4">{description}</p>
         
-        {/* Features */}
-        <ul className="space-y-2 mb-6">
+        <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+          {description}
+        </p>
+
+        <ul className="space-y-2">
           {features.map((feature, index) => (
-            <li key={index} className="flex items-center text-gray-300 text-sm">
-              <svg className="w-4 h-4 mr-2 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <motion.li
+              key={index}
+              className={`flex items-center gap-2 ${
+                isDark ? 'text-gray-400' : 'text-gray-700'
+              }`}
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <svg className={`w-4 h-4 ${isDark ? 'text-teal-400' : 'text-teal-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
               </svg>
               {feature}
-            </li>
+            </motion.li>
           ))}
         </ul>
 
-        {/* Price */}
-        <div className="flex justify-between items-center mb-6">
-          <span className="text-2xl font-bold text-white">{price}</span>
-          <span className="text-sm text-gray-400">per month</span>
-        </div>
-
-        {/* CTA Button */}
         <motion.a
-          onClick={handleWhatsAppClick}
-          className="block w-full py-3 px-4 bg-gradient-to-r from-purple-500 to-teal-500 text-white text-center rounded-lg font-semibold hover:shadow-lg transition-all duration-300"
-          whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(139, 92, 246, 0.3)" }}
-          whileTap={{ scale: 0.98 }}
+          href={whatsappLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 mt-4 text-sm font-semibold bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent group"
+          whileHover={{ x: 4 }}
+          transition={{ duration: 0.2 }}
         >
-          <span>Contact via WhatsApp</span>
+          Learn More
+          <HiArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
         </motion.a>
       </div>
-    </div>
+
+      {/* Hover Effects */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-teal-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+    </motion.div>
   );
-}
+};
+
+export default ProductCard;

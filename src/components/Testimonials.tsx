@@ -1,118 +1,225 @@
-import { useEffect, useRef } from 'react';
-import { motion, useAnimation, useInView } from 'framer-motion';
-import TestimonialCard, { testimonials } from './TestimonialCard';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { FaQuoteLeft, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
-const Testimonials = () => {
-  const scrollRef = useRef(null);
-  const isInView = useInView(scrollRef);
-  const controls = useAnimation();
+interface TestimonialProps {
+  isDark: boolean;
+}
+
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  company: string;
+  image: string;
+  content: string;
+}
+
+const testimonials: Testimonial[] = [
+  {
+    id: 1,
+    name: "Sarah Johnson",
+    role: "CEO",
+    company: "TechVision Inc.",
+    image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    content: "Working with this team has been transformative for our business. Their innovative solutions and attention to detail have helped us achieve remarkable growth."
+  },
+  {
+    id: 2,
+    name: "Michael Chen",
+    role: "CTO",
+    company: "InnovateLabs",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    content: "The level of technical expertise and creativity they bring to each project is outstanding. They've helped us stay ahead in a competitive market."
+  },
+  {
+    id: 3,
+    name: "Emily Rodriguez",
+    role: "Marketing Director",
+    company: "GlobalBrand Co.",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&h=200&q=80",
+    content: "Their ability to understand our vision and translate it into beautiful, functional solutions has exceeded our expectations. Truly exceptional work."
+  }
+];
+
+const Testimonials = ({ isDark }: TestimonialProps) => {
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [direction, setDirection] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
-    
-    if (isInView) {
-      const animate = async () => {
-        await controls.start({
-          x: [0, -1920],
-          transition: {
-            duration: 30,
-            ease: "linear",
-            repeat: Infinity,
-          }
-        });
-      };
-      
-      timeout = setTimeout(animate, 1000);
-    }
+    if (!isAutoPlaying) return;
 
-    return () => clearTimeout(timeout);
-  }, [isInView, controls]);
+    const timer = setInterval(() => {
+      setDirection(1);
+      setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [isAutoPlaying]);
+
+  const handlePrevious = () => {
+    setIsAutoPlaying(false);
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  const handleNext = () => {
+    setIsAutoPlaying(false);
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? 1000 : -1000,
+      opacity: 0
+    }),
+    center: {
+      zIndex: 1,
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      zIndex: 0,
+      x: direction < 0 ? 1000 : -1000,
+      opacity: 0
+    })
+  };
 
   return (
-    <section className="relative py-20 overflow-hidden bg-gray-900/30 backdrop-blur-sm" id="testimonials">
-      {/* Subtle Background Effects */}
-      <div className="absolute inset-0">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-500/5 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-teal-500/5 rounded-full filter blur-3xl"></div>
-      </div>
-
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <motion.div 
-          className="max-w-3xl mx-auto text-center mb-20"
+    <section className={`py-20 transition-colors duration-300 ${
+      isDark ? 'bg-gray-900' : 'bg-gray-50'
+    }`}>
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <motion.div
+          className="text-center mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            whileInView={{ scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="inline-block"
-          >
-            <span className="px-4 py-2 rounded-full bg-purple-500/10 border border-purple-500/20 text-sm text-purple-400 mb-4 inline-block">
-              Testimonials
-            </span>
-          </motion.div>
-          
-          <h2 className="text-4xl sm:text-5xl font-bold mt-4 mb-6 bg-gradient-to-r from-purple-400 via-teal-400 to-blue-400 bg-clip-text text-transparent">
+          <span className={`inline-block px-4 py-2 rounded-full mb-4 ${
+            isDark
+              ? 'bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 text-purple-400'
+              : 'bg-purple-50 text-purple-600'
+          }`}>
+            Testimonials
+          </span>
+          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
             What Our Clients Say
           </h2>
-          <p className="text-xl text-gray-300">
-            Don't just take our word for it. Here's what our clients have to say about our services.
+          <p className={`max-w-2xl mx-auto ${
+            isDark ? 'text-gray-400' : 'text-gray-600'
+          }`}>
+            Discover why leading businesses trust us with their digital transformation journey
           </p>
         </motion.div>
 
-        {/* Testimonials Slider */}
-        <div className="relative" ref={scrollRef}>
-          {/* Subtle Gradient Overlays */}
-          <div className="absolute left-0 top-0 bottom-0 w-40 bg-gradient-to-r from-gray-900/10 to-transparent z-10"></div>
-          <div className="absolute right-0 top-0 bottom-0 w-40 bg-gradient-to-l from-gray-900/10 to-transparent z-10"></div>
-          
-          {/* Sliding Content */}
-          <motion.div 
-            className="flex gap-6 py-8"
-            animate={controls}
-          >
-            {/* First Set */}
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={`first-${index}`} {...testimonial} />
-            ))}
-            {/* Duplicate Set for Infinite Loop */}
-            {testimonials.map((testimonial, index) => (
-              <TestimonialCard key={`second-${index}`} {...testimonial} />
-            ))}
-          </motion.div>
-        </div>
-
-        {/* Bottom CTA */}
-        <motion.div 
-          className="mt-20 text-center"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <motion.a
-            href="#contact"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-purple-500 to-teal-500 text-white rounded-full font-semibold hover:shadow-lg transition-all group"
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            Start Your Project
-            <svg 
-              className="w-5 h-5 group-hover:translate-x-1 transition-transform" 
-              fill="none" 
-              stroke="currentColor" 
-              viewBox="0 0 24 24"
+        <div className="relative max-w-4xl mx-auto">
+          <AnimatePresence initial={false} custom={direction} mode="wait">
+            <motion.div
+              key={currentIndex}
+              custom={direction}
+              variants={slideVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{
+                x: { type: "spring", stiffness: 300, damping: 30 },
+                opacity: { duration: 0.2 }
+              }}
+              className={`relative p-8 rounded-2xl ${
+                isDark
+                  ? 'bg-gray-800/50 backdrop-blur-lg border border-gray-700/50'
+                  : 'bg-white/70 border border-gray-200'
+              }`}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </motion.a>
-          <p className="mt-4 text-gray-300">Join our satisfied clients today!</p>
-        </motion.div>
+              <div className="flex flex-col items-center text-center">
+                <FaQuoteLeft className={`w-8 h-8 mb-6 ${
+                  isDark ? 'text-purple-400' : 'text-purple-500'
+                }`} />
+                
+                <p className={`text-lg mb-8 ${
+                  isDark ? 'text-gray-300' : 'text-gray-600'
+                }`}>
+                  {testimonials[currentIndex].content}
+                </p>
+
+                <img
+                  src={testimonials[currentIndex].image}
+                  alt={testimonials[currentIndex].name}
+                  className="w-16 h-16 rounded-full object-cover mb-4"
+                />
+
+                <div>
+                  <h4 className="font-bold bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
+                    {testimonials[currentIndex].name}
+                  </h4>
+                  <p className={`text-sm ${
+                    isDark ? 'text-gray-400' : 'text-gray-600'
+                  }`}>
+                    {testimonials[currentIndex].role} at {testimonials[currentIndex].company}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Navigation Buttons */}
+          <div className="absolute inset-0 flex items-center justify-between">
+            <motion.button
+              onClick={handlePrevious}
+              className={`-left-4 p-3 rounded-full ${
+                isDark
+                  ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
+              } shadow-lg backdrop-blur-sm`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaArrowLeft className="w-5 h-5" />
+            </motion.button>
+            
+            <motion.button
+              onClick={handleNext}
+              className={`-right-4 p-3 rounded-full ${
+                isDark
+                  ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
+                  : 'bg-white text-gray-600 hover:bg-gray-50'
+              } shadow-lg backdrop-blur-sm`}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <FaArrowRight className="w-5 h-5" />
+            </motion.button>
+          </div>
+
+          {/* Dots Navigation */}
+          <div className="flex justify-center gap-2 mt-8">
+            {testimonials.map((_, index) => (
+              <motion.button
+                key={index}
+                onClick={() => {
+                  setIsAutoPlaying(false);
+                  setDirection(index > currentIndex ? 1 : -1);
+                  setCurrentIndex(index);
+                }}
+                className={`w-2 h-2 rounded-full transition-colors ${
+                  index === currentIndex
+                    ? isDark
+                      ? 'bg-purple-400'
+                      : 'bg-purple-600'
+                    : isDark
+                      ? 'bg-gray-700'
+                      : 'bg-gray-300'
+                }`}
+                whileHover={{ scale: 1.2 }}
+                whileTap={{ scale: 0.8 }}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </section>
   );
