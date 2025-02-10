@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { FaGithub, FaTwitter, FaInstagram, FaLinkedin, FaWhatsapp } from 'react-icons/fa';
+import { FaInstagram,FaWhatsapp, FaFacebook, FaTiktok } from 'react-icons/fa';
+import { FaXTwitter } from 'react-icons/fa6';
 import { HiMail } from 'react-icons/hi';
 
 interface FooterProps {
@@ -10,20 +11,20 @@ const Footer = ({ isDark }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: <FaGithub className="w-5 h-5" />, href: '#', label: 'GitHub' },
-    { icon: <FaTwitter className="w-5 h-5" />, href: '#', label: 'Twitter' },
-    { icon: <FaInstagram className="w-5 h-5" />, href: '#', label: 'Instagram' },
-    { icon: <FaLinkedin className="w-5 h-5" />, href: '#', label: 'LinkedIn' },
-    { icon: <FaWhatsapp className="w-5 h-5" />, href: '#', label: 'WhatsApp' },
-    { icon: <HiMail className="w-5 h-5" />, href: '#', label: 'Email' },
-  ];
+    { icon: <FaWhatsapp className="w-5 h-5" />, href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0', label: 'WhatsApp' },
+    { icon: <FaXTwitter className="w-5 h-5" />, href: '@Ibrahimke_11', label: 'X' },
+    { icon: <FaFacebook className="w-5 h-5" />, href: 'https://www.facebook.com/ibrahim.khazri.12', label: 'Facebook' },
+    { icon: <FaInstagram className="w-5 h-5" />, href: 'officialahim11.ke', label: 'Instagram' },
+    { icon: <FaTiktok className="w-5 h-5" />, href: 'https://vm.tiktok.com/ZMkbyrYfN/', label: 'TikTok' },
+    { icon: <HiMail className="w-5 h-5" />, href: 'khazriibrahim11@gmail.com', label: 'Email' },
+];
 
   const footerLinks = {
     Services: [
-      { label: 'Web Development', href: '#' },
-      { label: 'Mobile Development', href: '#' },
-      { label: 'UI/UX Design', href: '#' },
-      { label: 'Backend Development', href: '#' },
+      { label: 'Web Development', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
+      { label: 'Mobile Development', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
+      { label: 'UI/UX Design', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
+      { label: 'Backend Development', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
     ],
     Company: [
       { label: 'About Us', href: '#' },

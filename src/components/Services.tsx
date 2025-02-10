@@ -8,11 +8,15 @@ interface ServiceCardProps {
   title: string;
   description: string;
   isDark: boolean;
+  whatsappLink: string;
 }
 
-const ServiceCard = ({ icon, title, description, isDark }: ServiceCardProps) => (
-  <motion.div
-    className={`p-6 rounded-2xl backdrop-blur-lg transition-all duration-300 group hover:scale-105 ${
+const ServiceCard = ({ icon, title, description, isDark, whatsappLink }: ServiceCardProps) => (
+  <motion.a
+    href={whatsappLink}
+    target="_blank"
+    rel="noopener noreferrer"
+    className={`block p-6 rounded-2xl backdrop-blur-lg transition-all duration-300 group hover:scale-105 cursor-pointer ${
       isDark
         ? 'bg-white/5 hover:bg-white/10 border border-white/10'
         : 'bg-white/70 hover:bg-white/90 border border-gray-200 hover:shadow-xl'
@@ -39,7 +43,7 @@ const ServiceCard = ({ icon, title, description, isDark }: ServiceCardProps) => 
     }`}>
       {description}
     </p>
-  </motion.div>
+  </motion.a>
 );
 
 interface ServicesProps {
@@ -51,32 +55,38 @@ const Services = ({ isDark }: ServicesProps) => {
     {
       icon: <FaCode className="w-7 h-7" />,
       title: "Web Development",
-      description: "Custom web applications built with modern technologies and best practices."
+      description: "Custom web applications built with modern technologies and best practices.",
+      whatsappLink: "https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0"
     },
     {
       icon: <FaMobileAlt className="w-7 h-7" />,
       title: "Mobile Development",
-      description: "Native and cross-platform mobile apps for iOS and Android."
+      description: "Native and cross-platform mobile apps for iOS and Android.",
+      whatsappLink: "https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0"
     },
     {
       icon: <FaPaintBrush className="w-7 h-7" />,
       title: "UI/UX Design",
-      description: "Beautiful and intuitive user interfaces that enhance user experience."
+      description: "Beautiful and intuitive user interfaces that enhance user experience.",
+      whatsappLink: "https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0"
     },
     {
       icon: <FaServer className="w-7 h-7" />,
       title: "Backend Development",
-      description: "Scalable and secure server-side solutions for your applications."
+      description: "Scalable and secure server-side solutions for your applications.",
+      whatsappLink: "https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0"
     },
     {
       icon: <IoSpeedometer className="w-7 h-7" />,
       title: "Performance Optimization",
-      description: "Speed up your applications for better user engagement."
+      description: "Speed up your applications for better user engagement.",
+      whatsappLink: "https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0"
     },
     {
       icon: <MdSecurity className="w-7 h-7" />,
       title: "Security Solutions",
-      description: "Protect your digital assets with our comprehensive security measures."
+      description: "Protect your digital assets with our comprehensive security measures.",
+      whatsappLink: "https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0"
     }
   ];
 

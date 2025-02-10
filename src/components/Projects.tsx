@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiArrowRight, HiOutlineExternalLink } from 'react-icons/hi';
+import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
 
 interface ProjectProps {
   isDark: boolean;
@@ -13,6 +14,8 @@ interface Project {
   image: string;
   link: string;
   technologies: string[];
+  githubLink: string;
+  liveLink: string;
 }
 
 const projects: Project[] = [
@@ -22,7 +25,9 @@ const projects: Project[] = [
     description: "A modern e-commerce platform with real-time inventory, AI-powered recommendations, and seamless payment integration.",
     image: "https://images.unsplash.com/photo-1661956602116-aa6865609028?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     link: "#",
-    technologies: ["React", "Node.js", "MongoDB", "Stripe"]
+    technologies: ["React", "Node.js", "MongoDB", "Stripe"],
+    githubLink: "https://github.com/ibrahimkeyboad/shop",
+    liveLink: "https://shop-iota-eight.vercel.app"
   },
   {
     title: "Mobile Banking App",
@@ -30,7 +35,9 @@ const projects: Project[] = [
     description: "Secure and intuitive mobile banking application with biometric authentication and real-time transactions.",
     image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     link: "#",
-    technologies: ["React Native", "Firebase", "Redux", "TypeScript"]
+    technologies: ["React Native", "Firebase", "Redux", "TypeScript"],
+    githubLink: "https://github.com/ibrahimkeyboad/chat-app",
+    liveLink: "https://chat-app-iota-eight.vercel.app"
   },
   {
     title: "AI Content Platform",
@@ -38,7 +45,9 @@ const projects: Project[] = [
     description: "Content generation platform powered by AI, helping businesses create engaging content at scale.",
     image: "https://images.unsplash.com/photo-1677442136019-21780ecad995?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     link: "#",
-    technologies: ["Python", "TensorFlow", "FastAPI", "Next.js"]
+    technologies: ["Python", "TensorFlow", "FastAPI", "Next.js"],
+    githubLink: "https://github.com/ibrahimkeyboad/ibk-digital",
+    liveLink: "https://ibk-digital.vercel.app"
   },
   {
     title: "Analytics Dashboard",
@@ -46,13 +55,20 @@ const projects: Project[] = [
     description: "Real-time analytics dashboard with interactive charts and customizable reporting features.",
     image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     link: "#",
-    technologies: ["Vue.js", "D3.js", "GraphQL", "PostgreSQL"]
+    technologies: ["Vue.js", "D3.js", "GraphQL", "PostgreSQL"],
+    githubLink: "https://github.com/ibrahimkeyboad/shop",
+    liveLink: "https://shop-iota-eight.vercel.app"
   }
 ];
 
 const categories = ["All", ...new Set(projects.map(project => project.category))];
 
-const ProjectCard = ({ project, isDark }: { project: Project; isDark: boolean }) => (
+interface ProjectCardProps {
+  project: Project;
+  isDark: boolean;
+}
+
+const ProjectCard = ({ project, isDark }: ProjectCardProps) => (
   <motion.div
     className={`group relative rounded-2xl overflow-hidden ${
       isDark
@@ -74,12 +90,24 @@ const ProjectCard = ({ project, isDark }: { project: Project; isDark: boolean })
       
       <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
         <motion.a
-          href={project.link}
+          href={project.githubLink}
+          target="_blank"
+          rel="noopener noreferrer"
           className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full text-white font-semibold flex items-center gap-2 hover:bg-white/20 transition-colors"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
         >
-          View Project <HiOutlineExternalLink className="w-5 h-5" />
+          <FaGithub className="w-5 h-5" />
+        </motion.a>
+        <motion.a
+          href={project.liveLink}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="px-6 py-3 bg-white/10 backdrop-blur-sm rounded-full text-white font-semibold flex items-center gap-2 hover:bg-white/20 transition-colors"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <FaExternalLinkAlt className="w-5 h-5" />
         </motion.a>
       </div>
     </div>

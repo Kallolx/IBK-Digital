@@ -22,7 +22,7 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const images = ["/images/my.png", "/images/my2.png"];
+  const images = ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg"];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -32,7 +32,7 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
 
     // Image rotation interval
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev === 0 ? 1 : 0));
+      setCurrentImageIndex((prev) => (prev === 0 ? 1 : prev === 1 ? 2 : 0));
     }, 5000); // Change image every 5 seconds
 
     return () => {
@@ -43,17 +43,17 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
 
   return (
     <div className={`relative overflow-hidden transition-colors duration-300 ${
-      isDark ? 'bg-gray-900' : 'bg-gray-50'
+      isDark ? 'bg-gray-950' : 'bg-gray-50'
     }`}>
       {/* Background Elements */}
       <div className={`absolute inset-0 transition-colors duration-300 ${
         isDark 
-          ? 'bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900' 
+          ? 'bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950' 
           : 'bg-gradient-to-br from-white via-gray-50 to-white'
       }`}></div>
       
       {/* Animated Background Patterns */}
-      <div className={`absolute inset-0 ${isDark ? 'opacity-20' : 'opacity-10'}`}>
+      <div className={`absolute inset-0 ${isDark ? 'opacity-10' : 'opacity-5'}`}>
         {/* Grid Pattern */}
         <div className="absolute inset-0" 
           style={{
@@ -65,13 +65,13 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
         
         {/* Floating Elements */}
         <div className={`absolute top-20 left-10 w-72 h-72 rounded-full mix-blend-overlay filter blur-3xl animate-blob ${
-          isDark ? 'bg-purple-500/10' : 'bg-purple-500/30'
+          isDark ? 'bg-purple-500/20' : 'bg-purple-500/30'
         }`}></div>
         <div className={`absolute top-40 right-10 w-72 h-72 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-2000 ${
-          isDark ? 'bg-teal-500/10' : 'bg-teal-500/30'
+          isDark ? 'bg-teal-500/20' : 'bg-teal-500/30'
         }`}></div>
         <div className={`absolute bottom-20 left-1/2 w-72 h-72 rounded-full mix-blend-overlay filter blur-3xl animate-blob animation-delay-4000 ${
-          isDark ? 'bg-blue-500/10' : 'bg-blue-500/30'
+          isDark ? 'bg-blue-500/20' : 'bg-blue-500/30'
         }`}></div>
       </div>
 
@@ -79,7 +79,7 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
       <nav className={`fixed w-full z-50 transition-all duration-500 ${
         isScrolled
           ? isDark 
-            ? 'bg-gray-900/90 backdrop-blur-md shadow-lg' 
+            ? 'bg-gray-950/90 backdrop-blur-md shadow-lg' 
             : 'bg-white/90 backdrop-blur-md shadow-lg'
           : 'bg-transparent'
       } py-4`}>
@@ -95,7 +95,7 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
               <img 
                 src="/images/logo.png" 
                 alt="IBK Digital Tech" 
-                className="h-10 w-auto"
+                className={`h-10 w-auto ${isDark ? '' : 'invert'}`}
               />
               <div className="hidden sm:block">
                 <span className={`text-xl font-bold bg-gradient-to-r from-purple-500 to-teal-500 bg-clip-text text-transparent`}>
@@ -160,7 +160,7 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
               <motion.div
                 className={`md:hidden absolute top-full left-0 right-0 border-t ${
                   isDark 
-                    ? 'bg-gray-900/95 backdrop-blur-lg border-white/10' 
+                    ? 'bg-gray-950/95 backdrop-blur-lg border-white/10' 
                     : 'bg-white/95 backdrop-blur-lg border-gray-200'
                 }`}
                 initial={{ opacity: 0, y: -10 }}
@@ -303,39 +303,51 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
 
             {/* Image Section */}
             <motion.div
-              className="relative order-1 lg:order-2 -mx-4 sm:mx-0"
+              className="relative order-1 lg:order-2"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl mx-auto max-w-[500px]">
-                <AnimatePresence mode="wait">
-                  <motion.img
-                    key={currentImageIndex}
-                    src={images[currentImageIndex]}
-                    alt="IBK Digital Tech"
-                    className="w-full h-[300px] sm:h-[400px] object-cover"
-                    initial={{ opacity: 0, scale: 1.1 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.5 }}
-                  />
-                </AnimatePresence>
-                {/* Gradient Overlays */}
-                <div className={`absolute inset-0 bg-gradient-to-r ${
-                  isDark 
-                    ? 'from-purple-500/10 to-teal-500/10' 
-                    : 'from-purple-500/20 to-teal-500/20'
-                }`}></div>
-                <div className="absolute inset-0 bg-gradient-to-t from-gray-900/50 via-transparent to-transparent"></div>
+              <div className="relative z-10 mx-auto max-w-[500px]">
+                <div className={`relative ${
+                  window.innerWidth < 768 ? 'w-64 h-64 mx-auto' : 'w-full h-[400px]'
+                }`}>
+                  <AnimatePresence mode="wait">
+                    <motion.img
+                      key={currentImageIndex}
+                      src={images[currentImageIndex]}
+                      alt="IBK Digital Tech"
+                      className={`w-full h-full object-cover shadow-2xl ${
+                        window.innerWidth < 768 
+                          ? 'rounded-full' 
+                          : 'rounded-2xl'
+                      }`}
+                      initial={{ opacity: 0, scale: 1.1 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.5 }}
+                    />
+                  </AnimatePresence>
+                  {/* Gradient Overlays */}
+                  <div className={`absolute inset-0 ${
+                    window.innerWidth < 768 ? 'rounded-full' : 'rounded-2xl'
+                  } bg-gradient-to-r ${
+                    isDark 
+                      ? 'from-purple-500/20 to-teal-500/20' 
+                      : 'from-purple-500/30 to-teal-500/30'
+                  }`}></div>
+                  <div className={`absolute inset-0 ${
+                    window.innerWidth < 768 ? 'rounded-full' : 'rounded-2xl'
+                  } bg-gradient-to-t from-gray-900/50 via-transparent to-transparent`}></div>
+                </div>
               </div>
 
               {/* Decorative Elements */}
               <div className={`absolute -top-10 -right-10 w-40 h-40 rounded-full blur-3xl animate-pulse ${
-                isDark ? 'bg-purple-500/20' : 'bg-purple-500/30'
+                isDark ? 'bg-purple-500/30' : 'bg-purple-500/40'
               }`}></div>
               <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-3xl animate-pulse animation-delay-2000 ${
-                isDark ? 'bg-teal-500/20' : 'bg-teal-500/30'
+                isDark ? 'bg-teal-500/30' : 'bg-teal-500/40'
               }`}></div>
 
               {/* Image Navigation Dots */}
