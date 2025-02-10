@@ -11,20 +11,46 @@ const Footer = ({ isDark }: FooterProps) => {
   const currentYear = new Date().getFullYear();
 
   const socialLinks = [
-    { icon: <FaWhatsapp className="w-5 h-5" />, href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0', label: 'WhatsApp' },
-    { icon: <FaXTwitter className="w-5 h-5" />, href: '@Ibrahimke_11', label: 'X' },
-    { icon: <FaFacebook className="w-5 h-5" />, href: 'https://www.facebook.com/ibrahim.khazri.12', label: 'Facebook' },
-    { icon: <FaInstagram className="w-5 h-5" />, href: 'officialahim11.ke', label: 'Instagram' },
-    { icon: <FaTiktok className="w-5 h-5" />, href: 'https://vm.tiktok.com/ZMkbyrYfN/', label: 'TikTok' },
-    { icon: <HiMail className="w-5 h-5" />, href: 'khazriibrahim11@gmail.com', label: 'Email' },
-];
+    { 
+      icon: <FaWhatsapp className="w-5 h-5" />, 
+      href: 'https://wa.me/254757033657', 
+      label: 'WhatsApp' 
+    },
+    { 
+      icon: <FaXTwitter className="w-5 h-5" />, 
+      href: 'https://x.com/Ibrahimke_11', 
+      label: 'X' 
+    },
+    { 
+      icon: <FaFacebook className="w-5 h-5" />, 
+      href: 'https://www.facebook.com/ibrahim.khazri.12', 
+      label: 'Facebook' 
+    },
+    { 
+      icon: <FaInstagram className="w-5 h-5" />, 
+      href: 'https://www.instagram.com/officialahim11.ke', 
+      label: 'Instagram' 
+    },
+    { 
+      icon: <FaTiktok className="w-5 h-5" />, 
+      href: 'https://vm.tiktok.com/ZMkbyrYfN/', 
+      label: 'TikTok' 
+    },
+    { 
+      icon: <HiMail className="w-5 h-5" />, 
+      href: 'mailto:khazriibrahim11@gmail.com', 
+      label: 'Email',
+      target: '_blank',
+      rel: 'noopener noreferrer'
+    },
+  ];
 
   const footerLinks = {
     Services: [
-      { label: 'Web Development', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
-      { label: 'Mobile Development', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
-      { label: 'UI/UX Design', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
-      { label: 'Backend Development', href: 'https://api.whatsapp.com/message/6IDRYRG7MWRMJ1?autoload=1&app_absent=0' },
+      { label: 'Web Development', href: 'https://wa.me/254757033657' },
+      { label: 'Mobile Development', href: 'https://wa.me/254757033657' },
+      { label: 'UI/UX Design', href: 'https://wa.me/254757033657' },
+      { label: 'Backend Development', href: 'https://wa.me/254757033657' },
     ],
     Company: [
       { label: 'About Us', href: '#' },

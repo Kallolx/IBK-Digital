@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, memo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaQuoteLeft, FaArrowLeft, FaArrowRight } from 'react-icons/fa';
 
@@ -42,55 +42,113 @@ const testimonials: Testimonial[] = [
   }
 ];
 
+// Memoized Testimonial Card Component
+const TestimonialCard = memo(({ testimonial, isDark }: { testimonial: Testimonial; isDark: boolean }) => (
+  <div className="flex flex-col items-center text-center">
+    <FaQuoteLeft className={`w-8 h-8 mb-6 ${
+      isDark ? 'text-purple-400' : 'text-purple-500'
+    }`} />
+    
+    <p className={`text-lg mb-8 ${
+      isDark ? 'text-gray-300' : 'text-gray-600'
+    }`}>
+      {testimonial.content}
+    </p>
+
+    <img
+      src={testimonial.image}
+      alt={testimonial.name}
+      className="w-16 h-16 rounded-full object-cover mb-4"
+      loading="lazy"
+    />
+
+    <div>
+      <h4 className="font-bold bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
+        {testimonial.name}
+      </h4>
+      <p className={`text-sm ${
+        isDark ? 'text-gray-400' : 'text-gray-600'
+      }`}>
+        {testimonial.role} at {testimonial.company}
+      </p>
+    </div>
+  </div>
+));
+
+const slideVariants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0
+  }),
+  center: {
+    x: 0,
+    opacity: 1
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0
+  })
+};
+
+const slideTransition = {
+  x: { 
+    type: "tween", 
+    duration: 0.8, 
+    ease: "easeInOut" 
+  },
+  opacity: { 
+    duration: 0.6 
+  }
+};
+
 const Testimonials = ({ isDark }: TestimonialProps) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
 
+  const handlePrevious = useCallback(() => {
+    setIsAutoPlaying(false);
+    setDirection(-1);
+    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  }, []);
+
+  const handleNext = useCallback(() => {
+    setIsAutoPlaying(false);
+    setDirection(1);
+    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
+  }, []);
+
+  // Slower autoplay interval
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    if (!isAutoPlaying || isPaused) return;
 
     const timer = setInterval(() => {
       setDirection(1);
       setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-    }, 5000);
+    }, 8000); // Increased interval to 8 seconds
 
     return () => clearInterval(timer);
-  }, [isAutoPlaying]);
+  }, [isAutoPlaying, isPaused]);
 
-  const handlePrevious = () => {
-    setIsAutoPlaying(false);
-    setDirection(-1);
-    setCurrentIndex((prev) => (prev - 1 + testimonials.length) % testimonials.length);
-  };
+  // Pause on hover/visibility change
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      setIsPaused(document.hidden);
+    };
 
-  const handleNext = () => {
-    setIsAutoPlaying(false);
-    setDirection(1);
-    setCurrentIndex((prev) => (prev + 1) % testimonials.length);
-  };
-
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? 1000 : -1000,
-      opacity: 0
-    }),
-    center: {
-      zIndex: 1,
-      x: 0,
-      opacity: 1
-    },
-    exit: (direction: number) => ({
-      zIndex: 0,
-      x: direction < 0 ? 1000 : -1000,
-      opacity: 0
-    })
-  };
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange);
+  }, []);
 
   return (
-    <section className={`py-20 transition-colors duration-300 ${
-      isDark ? 'bg-gray-900' : 'bg-gray-50'
-    }`}>
+    <section 
+      className={`py-20 transition-colors duration-300 ${
+        isDark ? 'bg-gray-900' : 'bg-gray-50'
+      }`}
+      onMouseEnter={() => setIsPaused(true)}
+      onMouseLeave={() => setIsPaused(false)}
+    >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           className="text-center mb-16"
@@ -116,7 +174,7 @@ const Testimonials = ({ isDark }: TestimonialProps) => {
           </p>
         </motion.div>
 
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative max-w-4xl mx-auto overflow-hidden">
           <AnimatePresence initial={false} custom={direction} mode="wait">
             <motion.div
               key={currentIndex}
@@ -125,48 +183,21 @@ const Testimonials = ({ isDark }: TestimonialProps) => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{
-                x: { type: "spring", stiffness: 300, damping: 30 },
-                opacity: { duration: 0.2 }
-              }}
+              transition={slideTransition}
               className={`relative p-8 rounded-2xl ${
                 isDark
                   ? 'bg-gray-800/50 backdrop-blur-lg border border-gray-700/50'
                   : 'bg-white/70 border border-gray-200'
               }`}
             >
-              <div className="flex flex-col items-center text-center">
-                <FaQuoteLeft className={`w-8 h-8 mb-6 ${
-                  isDark ? 'text-purple-400' : 'text-purple-500'
-                }`} />
-                
-                <p className={`text-lg mb-8 ${
-                  isDark ? 'text-gray-300' : 'text-gray-600'
-                }`}>
-                  {testimonials[currentIndex].content}
-                </p>
-
-                <img
-                  src={testimonials[currentIndex].image}
-                  alt={testimonials[currentIndex].name}
-                  className="w-16 h-16 rounded-full object-cover mb-4"
-                />
-
-                <div>
-                  <h4 className="font-bold bg-gradient-to-r from-purple-400 to-teal-400 bg-clip-text text-transparent">
-                    {testimonials[currentIndex].name}
-                  </h4>
-                  <p className={`text-sm ${
-                    isDark ? 'text-gray-400' : 'text-gray-600'
-                  }`}>
-                    {testimonials[currentIndex].role} at {testimonials[currentIndex].company}
-                  </p>
-                </div>
-              </div>
+              <TestimonialCard 
+                testimonial={testimonials[currentIndex]} 
+                isDark={isDark} 
+              />
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation Buttons */}
+          {/* Navigation Buttons with slower hover animation */}
           <div className="absolute inset-0 flex items-center justify-between">
             <motion.button
               onClick={handlePrevious}
@@ -174,9 +205,10 @@ const Testimonials = ({ isDark }: TestimonialProps) => {
                 isDark
                   ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
                   : 'bg-white text-gray-600 hover:bg-gray-50'
-              } shadow-lg backdrop-blur-sm`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              } shadow-lg backdrop-blur-sm transition-all duration-300`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
             >
               <FaArrowLeft className="w-5 h-5" />
             </motion.button>
@@ -187,15 +219,16 @@ const Testimonials = ({ isDark }: TestimonialProps) => {
                 isDark
                   ? 'bg-gray-800/50 text-gray-300 hover:bg-gray-700/50'
                   : 'bg-white text-gray-600 hover:bg-gray-50'
-              } shadow-lg backdrop-blur-sm`}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
+              } shadow-lg backdrop-blur-sm transition-all duration-300`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ duration: 0.3 }}
             >
               <FaArrowRight className="w-5 h-5" />
             </motion.button>
           </div>
 
-          {/* Dots Navigation */}
+          {/* Dots Navigation with smoother transitions */}
           <div className="flex justify-center gap-2 mt-8">
             {testimonials.map((_, index) => (
               <motion.button
@@ -205,17 +238,18 @@ const Testimonials = ({ isDark }: TestimonialProps) => {
                   setDirection(index > currentIndex ? 1 : -1);
                   setCurrentIndex(index);
                 }}
-                className={`w-2 h-2 rounded-full transition-colors ${
+                className={`w-2 h-2 rounded-full transition-all duration-500 ${
                   index === currentIndex
                     ? isDark
-                      ? 'bg-purple-400'
-                      : 'bg-purple-600'
+                      ? 'bg-purple-400 w-6'
+                      : 'bg-purple-600 w-6'
                     : isDark
                       ? 'bg-gray-700'
                       : 'bg-gray-300'
                 }`}
-                whileHover={{ scale: 1.2 }}
-                whileTap={{ scale: 0.8 }}
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.3 }}
               />
             ))}
           </div>
@@ -225,4 +259,4 @@ const Testimonials = ({ isDark }: TestimonialProps) => {
   );
 };
 
-export default Testimonials; 
+export default memo(Testimonials); 

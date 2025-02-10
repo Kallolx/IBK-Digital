@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { HiMenuAlt4 } from "react-icons/hi";
 import { IoClose } from "react-icons/io5";
 import { BsSun, BsMoonStars } from "react-icons/bs";
+import { FaWhatsapp } from "react-icons/fa";
 
 interface HeroProps {
   isDark: boolean;
@@ -21,8 +22,9 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const images = ["/images/1.jpeg", "/images/2.jpeg", "/images/3.jpeg"];
+  const images = ["/images/1.jpeg", "/images/2.jpeg"];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -30,16 +32,44 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
     };
     window.addEventListener("scroll", handleScroll);
 
-    // Image rotation interval
+    // Image rotation interval with smoother transition
     const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev === 0 ? 1 : prev === 1 ? 2 : 0));
-    }, 5000); // Change image every 5 seconds
+      if (!isPaused) {
+        setCurrentImageIndex((prev) => (prev === 0 ? 1 : 0));
+      }
+    }, 8000); // Change image every 8 seconds
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
       clearInterval(interval);
     };
-  }, []);
+  }, [isPaused]);
+
+  const slideVariants = {
+    enter: (direction: number) => ({
+      x: direction > 0 ? '100%' : '-100%',
+      opacity: 0
+    }),
+    center: {
+      x: 0,
+      opacity: 1
+    },
+    exit: (direction: number) => ({
+      x: direction < 0 ? '100%' : '-100%',
+      opacity: 0
+    })
+  };
+
+  const slideTransition = {
+    x: { 
+      type: "tween", 
+      duration: 1.2, 
+      ease: "easeInOut" 
+    },
+    opacity: { 
+      duration: 0.8 
+    }
+  };
 
   return (
     <div className={`relative overflow-hidden transition-colors duration-300 ${
@@ -244,11 +274,11 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
 
               <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight mb-6">
                 <span className="bg-gradient-to-r from-purple-500 to-teal-500 bg-clip-text text-transparent">
-                  Transforming Ideas
+                Transforming Ideas
                 </span>
                 <br />
                 <span className={`relative ${isDark ? 'text-gray-100' : 'text-gray-900'}`}>
-                  Into Digital Reality
+                     Into Digital Reality
                   <motion.svg
                     className={`absolute -bottom-2 left-0 w-full h-2 ${
                       isDark ? 'text-purple-500/20' : 'text-purple-500/40'
@@ -271,13 +301,15 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
               <p className={`text-lg sm:text-xl mb-8 max-w-lg mx-auto lg:mx-0 ${
                 isDark ? 'text-gray-400' : 'text-gray-600'
               }`}>
-                We craft innovative digital solutions that help businesses
-                thrive in the modern world. Your vision, our expertise.
+                 We craft innovative digital solutions that help businesses
+                 thrive in the modern world. Your vision, our expertise.
               </p>
 
               <div className="flex flex-wrap gap-4 justify-center lg:justify-start">
                 <motion.a
-                  href="#services"
+                  href="https://kallolsfolio.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="px-8 py-4 bg-gradient-to-r from-purple-500 to-teal-500 text-white rounded-full font-semibold hover:shadow-lg transition-all relative overflow-hidden group"
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -286,17 +318,20 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
                   <div className="absolute inset-0 bg-gradient-to-r from-teal-500 to-purple-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.a>
                 <motion.a
-                  href="#contact"
-                  className={`px-8 py-4 border-2 rounded-full font-semibold transition-all group ${
+                  href="https://wa.me/254757033657"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`px-8 py-4 border-2 rounded-full font-semibold transition-all group inline-flex items-center gap-2 ${
                     isDark 
-                      ? 'border-purple-500 text-purple-400 hover:bg-purple-500/10' 
-                      : 'border-purple-600 text-purple-600 hover:bg-purple-50'
+                      ? 'border-green-500 text-green-400 hover:bg-green-500/10' 
+                      : 'border-green-600 text-green-600 hover:bg-green-50'
                   }`}
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
+                  <FaWhatsapp className="w-5 h-5" />
                   Contact Us
-                  <span className="inline-block ml-2 transform group-hover:translate-x-1 transition-transform">→</span>
+                  <span className="inline-block transform group-hover:translate-x-1 transition-transform">→</span>
                 </motion.a>
               </div>
             </motion.div>
@@ -307,6 +342,8 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
+              onMouseEnter={() => setIsPaused(true)}
+              onMouseLeave={() => setIsPaused(false)}
             >
               <div className="relative z-10 mx-auto max-w-[500px]">
                 <div className={`relative ${
@@ -322,47 +359,33 @@ const Hero = ({ isDark, toggleTheme }: HeroProps) => {
                           ? 'rounded-full' 
                           : 'rounded-2xl'
                       }`}
-                      initial={{ opacity: 0, scale: 1.1 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.9 }}
-                      transition={{ duration: 0.5 }}
+                      variants={slideVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={slideTransition}
                     />
                   </AnimatePresence>
-                  {/* Gradient Overlays */}
-                  <div className={`absolute inset-0 ${
-                    window.innerWidth < 768 ? 'rounded-full' : 'rounded-2xl'
-                  } bg-gradient-to-r ${
-                    isDark 
-                      ? 'from-purple-500/20 to-teal-500/20' 
-                      : 'from-purple-500/30 to-teal-500/30'
-                  }`}></div>
-                  <div className={`absolute inset-0 ${
-                    window.innerWidth < 768 ? 'rounded-full' : 'rounded-2xl'
-                  } bg-gradient-to-t from-gray-900/50 via-transparent to-transparent`}></div>
+
+                  {/* Image Navigation Dots */}
+                  <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
+                    {images.map((_, index) => (
+                      <button
+                        key={index}
+                        onClick={() => {
+                          setCurrentImageIndex(index);
+                          setIsPaused(true);
+                          setTimeout(() => setIsPaused(false), 5000);
+                        }}
+                        className={`w-2 h-2 rounded-full transition-all duration-500 ${
+                          currentImageIndex === index 
+                            ? 'bg-white w-6' 
+                            : 'bg-white/50 hover:bg-white/75'
+                        }`}
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
-
-              {/* Decorative Elements */}
-              <div className={`absolute -top-10 -right-10 w-40 h-40 rounded-full blur-3xl animate-pulse ${
-                isDark ? 'bg-purple-500/30' : 'bg-purple-500/40'
-              }`}></div>
-              <div className={`absolute -bottom-10 -left-10 w-40 h-40 rounded-full blur-3xl animate-pulse animation-delay-2000 ${
-                isDark ? 'bg-teal-500/30' : 'bg-teal-500/40'
-              }`}></div>
-
-              {/* Image Navigation Dots */}
-              <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-20">
-                {images.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentImageIndex(index)}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      currentImageIndex === index 
-                        ? 'bg-white w-6' 
-                        : 'bg-white/50 hover:bg-white/75'
-                    }`}
-                  />
-                ))}
               </div>
             </motion.div>
           </div>
